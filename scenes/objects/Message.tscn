@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://ble4yq0w3ritg"]
+
+[ext_resource type="Script" path="res://scenes/objects/Message.gd" id="1_smj6f"]
+[ext_resource type="FontFile" uid="uid://ni0id2hsssxy" path="res://fonts/ShareTechMono-Regular.ttf" id="1_y73wf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jnb6j"]
+
+[node name="MessageBox" type="VBoxContainer"]
+theme_override_constants/separation = 2
+alignment = 2
+script = ExtResource("1_smj6f")
+
+[node name="Column" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="Column"]
+layout_mode = 2
+theme_override_constants/separation = 10
+theme_override_styles/separator = SubResource("StyleBoxEmpty_jnb6j")
+
+[node name="Message" type="Label" parent="Column"]
+custom_minimum_size = Vector2(850, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
+theme_override_fonts/font = ExtResource("1_y73wf")
+theme_override_font_sizes/font_size = 28
+text = "..."
+vertical_alignment = 2
+autowrap_mode = 2

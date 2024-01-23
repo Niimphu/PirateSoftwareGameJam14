@@ -1,0 +1,404 @@
+[gd_scene load_steps=26 format=3 uid="uid://c7d0psx84kt5s"]
+
+[ext_resource type="Script" path="res://scenes/Game.gd" id="1_epk3h"]
+[ext_resource type="Script" path="res://scenes/Processor.gd" id="2_ghb01"]
+[ext_resource type="FontFile" uid="uid://ni0id2hsssxy" path="res://fonts/ShareTechMono-Regular.ttf" id="2_ryi0o"]
+[ext_resource type="Script" path="res://scenes/ChatBot.gd" id="2_sruu2"]
+[ext_resource type="Script" path="res://scenes/Manager.gd" id="2_vrrrw"]
+[ext_resource type="Script" path="res://scenes/objects/InputLine.gd" id="3_buwsk"]
+[ext_resource type="Shader" path="res://shaders/CRT.gdshader" id="4_1if7a"]
+[ext_resource type="FontFile" uid="uid://dfwtskhfsmt2w" path="res://fonts/IBMPlexMono-Regular.ttf" id="6_qlvh3"]
+[ext_resource type="Script" path="res://scenes/Fade.gd" id="8_4bx75"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua7h"]
+bg_color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yu8r7"]
+bg_color = Color(0.101961, 0.156863, 0.152941, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f3pqr"]
+bg_color = Color(0.101961, 0.156863, 0.152941, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bidh2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qadth"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gn1ou"]
+shader = ExtResource("4_1if7a")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.4
+shader_parameter/scanlines_width = 0.25
+shader_parameter/grille_opacity = 0.1
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/pixelate = false
+shader_parameter/roll = true
+shader_parameter/roll_speed = 5.0
+shader_parameter/roll_size = 12.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.05
+shader_parameter/noise_opacity = 0.4
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.06
+shader_parameter/aberration = 0.01
+shader_parameter/brightness = 1.8
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 0.4
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6kiau"]
+bg_color = Color(0.117647, 0.129412, 0.164706, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_62gid"]
+
+[sub_resource type="Animation" id="Animation_q8f4h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_ac62l"]
+resource_name = "fade_in"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 3.36358),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_p3gs0"]
+resource_name = "fade_in_fast"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 3.36358),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_aunx2"]
+resource_name = "fade_out_fast"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(3.36358, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_chqbl"]
+_data = {
+"RESET": SubResource("Animation_q8f4h"),
+"fade_in": SubResource("Animation_ac62l"),
+"fade_in_fast": SubResource("Animation_p3gs0"),
+"fade_out_fast": SubResource("Animation_aunx2")
+}
+
+[sub_resource type="Animation" id="Animation_pnx0n"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1280, 2160)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -720)]
+}
+
+[sub_resource type="Animation" id="Animation_drwvm"]
+resource_name = "shut_down"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1280, 2160), Vector2(1280, 720)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -720), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_frstd"]
+_data = {
+"RESET": SubResource("Animation_pnx0n"),
+"shut_down": SubResource("Animation_drwvm")
+}
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_epk3h")
+
+[node name="Manager" type="Node" parent="."]
+script = ExtResource("2_vrrrw")
+
+[node name="ChatBot" type="Node" parent="."]
+script = ExtResource("2_sruu2")
+
+[node name="Processor" type="Node" parent="."]
+script = ExtResource("2_ghb01")
+
+[node name="Columns" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+theme_override_constants/separation = 0
+
+[node name="Terminal" type="PanelContainer" parent="Columns"]
+custom_minimum_size = Vector2(960, 720)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_eua7h")
+
+[node name="MarginContainer" type="MarginContainer" parent="Columns/Terminal"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="Rows" type="VBoxContainer" parent="Columns/Terminal/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Output" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_yu8r7")
+
+[node name="MarginContainer" type="MarginContainer" parent="Columns/Terminal/MarginContainer/Rows/Output"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HistoryScroll" type="ScrollContainer" parent="Columns/Terminal/MarginContainer/Rows/Output/MarginContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="History" type="VBoxContainer" parent="Columns/Terminal/MarginContainer/Rows/Output/MarginContainer/HistoryScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="Input" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Rows"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f3pqr")
+
+[node name="CommandLine" type="HBoxContainer" parent="Columns/Terminal/MarginContainer/Rows/Input"]
+layout_mode = 2
+
+[node name="Prompt" type="Label" parent="Columns/Terminal/MarginContainer/Rows/Input/CommandLine"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
+theme_override_fonts/font = ExtResource("2_ryi0o")
+theme_override_font_sizes/font_size = 28
+text = " > "
+
+[node name="InputLine" type="LineEdit" parent="Columns/Terminal/MarginContainer/Rows/Input/CommandLine"]
+custom_minimum_size = Vector2(840, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
+theme_override_fonts/font = ExtResource("2_ryi0o")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_bidh2")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qadth")
+max_length = 55
+context_menu_enabled = false
+shortcut_keys_enabled = false
+caret_blink = true
+caret_blink_interval = 0.45
+script = ExtResource("3_buwsk")
+
+[node name="OldScreenFilter" type="ColorRect" parent="Columns/Terminal"]
+material = SubResource("ShaderMaterial_gn1ou")
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Info" type="PanelContainer" parent="Columns"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6kiau")
+
+[node name="MarginContainer" type="MarginContainer" parent="Columns/Info"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Rows" type="VBoxContainer" parent="Columns/Info/MarginContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Columns/Info/MarginContainer/Rows"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_qlvh3")
+theme_override_font_sizes/font_size = 28
+text = "AjaxAI"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Columns/Info/MarginContainer/Rows"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 0
+
+[node name="Chat" type="VBoxContainer" parent="Columns/Info/MarginContainer/Rows/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HSeparator" type="HSeparator" parent="Columns/Info/MarginContainer/Rows/MarginContainer/Chat"]
+layout_mode = 2
+theme_override_constants/separation = 4
+theme_override_styles/separator = SubResource("StyleBoxEmpty_62gid")
+
+[node name="ChatScroll" type="ScrollContainer" parent="Columns/Info/MarginContainer/Rows/MarginContainer/Chat"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ChatLog" type="VBoxContainer" parent="Columns/Info/MarginContainer/Rows/MarginContainer/Chat/ChatScroll"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CompanyName" type="Label" parent="Columns/Info/MarginContainer/Rows"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_qlvh3")
+text = "Viral Co."
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Fade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+script = ExtResource("8_4bx75")
+metadata/_edit_lock_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Fade"]
+libraries = {
+"": SubResource("AnimationLibrary_chqbl")
+}
+
+[node name="ShutDown" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -720.0
+offset_right = 1280.0
+offset_bottom = 1440.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(640, 1080)
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Top" type="ColorRect" parent="ShutDown"]
+custom_minimum_size = Vector2(1280, 720)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -640.0
+offset_right = 640.0
+offset_bottom = 720.0
+grow_horizontal = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Bottom" type="ColorRect" parent="ShutDown"]
+custom_minimum_size = Vector2(1280, 720)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0, 0, 0, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ShutDown"]
+libraries = {
+"": SubResource("AnimationLibrary_frstd")
+}
+
+[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" to="." method="_on_input_line_text_submitted"]
+[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" to="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" method="_on_text_submitted"]
+[connection signal="animation_finished" from="Fade/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
+[connection signal="animation_finished" from="Fade/AnimationPlayer" to="Fade" method="_on_animation_player_animation_finished"]
