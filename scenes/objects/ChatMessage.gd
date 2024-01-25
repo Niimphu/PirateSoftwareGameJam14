@@ -6,7 +6,7 @@ signal typing_finished
 
 func new_message(message: String):
 	text = message
-	visible_characters = 0
+	visible_ratio = 0
 
 func _process(_delta):
 	if visible_ratio >= 1:
@@ -14,7 +14,7 @@ func _process(_delta):
 		set_process(false)
 	else:
 		if time == 0:
-			time = System.TYPE_DELAY
+			time = System.type_delay
 			visible_characters += 1
 		else:
 			time -= 1

@@ -1,9 +1,10 @@
 extends Control
 
 @onready var processor = $Processor
-@onready var history = $Columns/Terminal/MarginContainer/Rows/Output/MarginContainer/HistoryScroll/History
-@onready var input_box = $Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine
-@onready var scroll = $Columns/Terminal/MarginContainer/Rows/Output/MarginContainer/HistoryScroll
+@onready var game_manager = $GameManager
+@onready var history = $Columns/Terminal/MarginContainer/Columns/Rows/Output/MarginContainer/HistoryScroll/History
+@onready var input_box = $Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine/InputLine
+@onready var scroll = $Columns/Terminal/MarginContainer/Columns/Rows/Output/MarginContainer/HistoryScroll
 @onready var scrollbar = scroll.get_v_scroll_bar()
 
 const Reply = preload("res://scenes/objects/InputResponse.tscn")
@@ -15,12 +16,27 @@ func _ready():
 	scrollbar.connect("changed", scrollbar_changed)
 	processor.connect("clear_screen", clear_screen)
 	$Fade.fade_in()
+	get_tree().create_timer(10).timeout.connect(bot_help)
 
 
-func _on_input_line_text_submitted(new_text):
-	if new_text.is_empty():
+func bot_help():
+	if System.in_game:
 		return
-	new_response(new_text)
+	if history.get_child_count() < 3:
+		var tips = PackedStringArray(["You can type \"commands\" in the terminal to see currently available commands.",
+			"Type \"help\" in the terminal to bring up the manual.",
+			"Try typing something in the terminal."])
+		$ChatBot.type_message(tips[randi() % 3])
+
+
+func _on_input_line_text_submitted(input):
+	if input.is_empty():
+		return
+	var response: String
+	response = processor.process_input(input)
+	if response == "":
+		response = game_manager.input_submitted(input)
+	print_response(input, response)
 
 
 func new_output(input: String):
@@ -31,12 +47,11 @@ func new_output(input: String):
 	history.add_child(message)
 
 
-func new_response(input: String):
-	var response = processor.process_input(input)
+func print_response(input: String, response: String):
 	if response == " ":
 		return
 	var error = response.begins_with("Error")
-	
+
 	var reply = Reply.instantiate()
 	reply.set_text(input, response, error)
 	history.add_child(reply)
@@ -57,7 +72,7 @@ func print_start():
 
 
 func start_session():
-	$ChatBot.begin()
+	$ChatBot.system_start()
 	input_box.grab_focus()
 	input_box.set("placeholder_text", "Type here")
 

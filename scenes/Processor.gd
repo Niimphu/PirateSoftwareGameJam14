@@ -38,7 +38,7 @@ func process_universal_command(words: PackedStringArray) -> String:
 				shut_down()
 				return "Quitting..."
 			_:
-				return "" 
+				return ""
 
 
 func process_menu_command(words: PackedStringArray) -> String:
@@ -58,10 +58,11 @@ func process_game_command(words: PackedStringArray) -> String:
 	
 	match first_word:
 		"end":
-			System.in_game = false
-			return "Session terminated"
+			System.end_game()
+			return end()
 		_:
-			return "Error: command not found"
+			return ""
+
 
 
 func commands():
@@ -119,6 +120,12 @@ func quit():
 
 
 func start() -> String:
-	System.in_game = true
+	System.start_game()
 	return "Session start"
+
+
+func end():
+	System.end_game()
+	return "Session terminated"
+
 

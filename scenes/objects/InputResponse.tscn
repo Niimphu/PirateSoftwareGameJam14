@@ -6,11 +6,13 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xqafw"]
 
 [node name="InputResponse" type="VBoxContainer"]
+offset_right = 864.0
+offset_bottom = 62.0
 theme_override_constants/separation = 2
 script = ExtResource("1_51n63")
 
 [node name="InputHistory" type="Label" parent="."]
-custom_minimum_size = Vector2(860, 0)
+custom_minimum_size = Vector2(826, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.615686, 0.615686, 0.615686, 1)
 theme_override_fonts/font = ExtResource("1_skypk")
@@ -28,7 +30,7 @@ theme_override_constants/separation = 10
 theme_override_styles/separator = SubResource("StyleBoxEmpty_xqafw")
 
 [node name="ResponseHistory" type="Label" parent="Response"]
-custom_minimum_size = Vector2(850, 0)
+custom_minimum_size = Vector2(816, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
 theme_override_fonts/font = ExtResource("1_skypk")

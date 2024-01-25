@@ -1,14 +1,16 @@
-[gd_scene load_steps=26 format=3 uid="uid://c7d0psx84kt5s"]
+[gd_scene load_steps=31 format=3 uid="uid://c7d0psx84kt5s"]
 
 [ext_resource type="Script" path="res://scenes/Game.gd" id="1_epk3h"]
 [ext_resource type="Script" path="res://scenes/Processor.gd" id="2_ghb01"]
+[ext_resource type="Script" path="res://scenes/GameManager.gd" id="2_gieat"]
 [ext_resource type="FontFile" uid="uid://ni0id2hsssxy" path="res://fonts/ShareTechMono-Regular.ttf" id="2_ryi0o"]
 [ext_resource type="Script" path="res://scenes/ChatBot.gd" id="2_sruu2"]
-[ext_resource type="Script" path="res://scenes/Manager.gd" id="2_vrrrw"]
 [ext_resource type="Script" path="res://scenes/objects/InputLine.gd" id="3_buwsk"]
+[ext_resource type="Script" path="res://scenes/WordGenerator.gd" id="3_smfgc"]
 [ext_resource type="Shader" path="res://shaders/CRT.gdshader" id="4_1if7a"]
 [ext_resource type="FontFile" uid="uid://dfwtskhfsmt2w" path="res://fonts/IBMPlexMono-Regular.ttf" id="6_qlvh3"]
 [ext_resource type="Script" path="res://scenes/Fade.gd" id="8_4bx75"]
+[ext_resource type="Script" path="res://scenes/Progress.gd" id="8_wamar"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eua7h"]
 bg_color = Color(0.0901961, 0.0901961, 0.0901961, 1)
@@ -22,6 +24,13 @@ bg_color = Color(0.101961, 0.156863, 0.152941, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bidh2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qadth"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8k4n7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vbo1s"]
+bg_color = Color(0.368627, 0.960784, 0.756863, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v76gm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gn1ou"]
 shader = ExtResource("4_1if7a")
@@ -191,8 +200,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_epk3h")
 
-[node name="Manager" type="Node" parent="."]
-script = ExtResource("2_vrrrw")
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("2_gieat")
+
+[node name="WordGenerator" type="Node" parent="GameManager"]
+script = ExtResource("3_smfgc")
+
+[node name="NextTask" type="Timer" parent="GameManager"]
+wait_time = 2.0
 
 [node name="ChatBot" type="Node" parent="."]
 script = ExtResource("2_sruu2")
@@ -207,7 +222,7 @@ offset_bottom = 720.0
 theme_override_constants/separation = 0
 
 [node name="Terminal" type="PanelContainer" parent="Columns"]
-custom_minimum_size = Vector2(960, 720)
+custom_minimum_size = Vector2(944, 720)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_eua7h")
 
@@ -218,62 +233,81 @@ theme_override_constants/margin_top = 32
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 32
 
-[node name="Rows" type="VBoxContainer" parent="Columns/Terminal/MarginContainer"]
+[node name="Columns" type="HBoxContainer" parent="Columns/Terminal/MarginContainer"]
+layout_mode = 2
+
+[node name="Rows" type="VBoxContainer" parent="Columns/Terminal/MarginContainer/Columns"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Output" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Rows"]
+[node name="Output" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows"]
+custom_minimum_size = Vector2(844, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_yu8r7")
 
-[node name="MarginContainer" type="MarginContainer" parent="Columns/Terminal/MarginContainer/Rows/Output"]
+[node name="MarginContainer" type="MarginContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows/Output"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="HistoryScroll" type="ScrollContainer" parent="Columns/Terminal/MarginContainer/Rows/Output/MarginContainer"]
+[node name="HistoryScroll" type="ScrollContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows/Output/MarginContainer"]
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="History" type="VBoxContainer" parent="Columns/Terminal/MarginContainer/Rows/Output/MarginContainer/HistoryScroll"]
+[node name="History" type="VBoxContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows/Output/MarginContainer/HistoryScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 10
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="Input" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Rows"]
+[node name="Input" type="PanelContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f3pqr")
 
-[node name="CommandLine" type="HBoxContainer" parent="Columns/Terminal/MarginContainer/Rows/Input"]
+[node name="CommandLine" type="HBoxContainer" parent="Columns/Terminal/MarginContainer/Columns/Rows/Input"]
 layout_mode = 2
 
-[node name="Prompt" type="Label" parent="Columns/Terminal/MarginContainer/Rows/Input/CommandLine"]
+[node name="Prompt" type="Label" parent="Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
 theme_override_fonts/font = ExtResource("2_ryi0o")
 theme_override_font_sizes/font_size = 28
 text = " > "
 
-[node name="InputLine" type="LineEdit" parent="Columns/Terminal/MarginContainer/Rows/Input/CommandLine"]
-custom_minimum_size = Vector2(840, 0)
+[node name="InputLine" type="LineEdit" parent="Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine"]
+custom_minimum_size = Vector2(815, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.368627, 0.960784, 0.756863, 1)
 theme_override_fonts/font = ExtResource("2_ryi0o")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxEmpty_bidh2")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_qadth")
-max_length = 55
+max_length = 50
 context_menu_enabled = false
 shortcut_keys_enabled = false
 caret_blink = true
 caret_blink_interval = 0.45
 script = ExtResource("3_buwsk")
+
+[node name="ProgressBar" type="ProgressBar" parent="Columns/Terminal/MarginContainer/Columns"]
+custom_minimum_size = Vector2(10, 644)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_8k4n7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_vbo1s")
+step = 1.0
+fill_mode = 3
+show_percentage = false
+script = ExtResource("8_wamar")
+
+[node name="VSeparator" type="VSeparator" parent="Columns/Terminal/MarginContainer/Columns"]
+layout_mode = 2
+theme_override_constants/separation = 14
+theme_override_styles/separator = SubResource("StyleBoxEmpty_v76gm")
 
 [node name="OldScreenFilter" type="ColorRect" parent="Columns/Terminal"]
 material = SubResource("ShaderMaterial_gn1ou")
@@ -288,10 +322,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6kiau")
 
 [node name="MarginContainer" type="MarginContainer" parent="Columns/Info"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
 
 [node name="Rows" type="VBoxContainer" parent="Columns/Info/MarginContainer"]
 layout_mode = 2
@@ -300,8 +334,9 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("6_qlvh3")
-theme_override_font_sizes/font_size = 28
-text = "AjaxAI"
+theme_override_font_sizes/font_size = 24
+text = "ProxyAI output:
+"
 horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="Columns/Info/MarginContainer/Rows"]
@@ -329,7 +364,7 @@ vertical_scroll_mode = 3
 
 [node name="ChatLog" type="VBoxContainer" parent="Columns/Info/MarginContainer/Rows/MarginContainer/Chat/ChatScroll"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="CompanyName" type="Label" parent="Columns/Info/MarginContainer/Rows"]
 layout_mode = 2
@@ -361,8 +396,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -720.0
-offset_right = 1280.0
-offset_bottom = 1440.0
+offset_bottom = 720.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(640, 1080)
@@ -398,7 +432,8 @@ libraries = {
 "": SubResource("AnimationLibrary_frstd")
 }
 
-[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" to="." method="_on_input_line_text_submitted"]
-[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" to="Columns/Terminal/MarginContainer/Rows/Input/CommandLine/InputLine" method="_on_text_submitted"]
+[connection signal="timeout" from="GameManager/NextTask" to="GameManager" method="_on_next_task_timeout"]
+[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine/InputLine" to="." method="_on_input_line_text_submitted"]
+[connection signal="text_submitted" from="Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine/InputLine" to="Columns/Terminal/MarginContainer/Columns/Rows/Input/CommandLine/InputLine" method="_on_text_submitted"]
 [connection signal="animation_finished" from="Fade/AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="animation_finished" from="Fade/AnimationPlayer" to="Fade" method="_on_animation_player_animation_finished"]
