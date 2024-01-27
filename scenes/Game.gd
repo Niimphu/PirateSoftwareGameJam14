@@ -17,6 +17,8 @@ func _ready():
 	processor.connect("clear_screen", clear_screen)
 	$Fade.fade_in()
 	get_tree().create_timer(10).timeout.connect(bot_help)
+	EventBus.game_start.connect(start_game)
+	EventBus.game_end.connect(end_game)
 
 
 func bot_help():
@@ -24,7 +26,7 @@ func bot_help():
 		return
 	if history.get_child_count() < 3:
 		var tips = PackedStringArray(["You can type \"commands\" in the terminal to see currently available commands.",
-			"Type \"help\" in the terminal to bring up the manual.",
+			"Type \"manual\" in the terminal to bring up the manual.",
 			"Try typing something in the terminal."])
 		$ChatBot.type_message(tips[randi() % 3])
 
@@ -67,7 +69,7 @@ func display_welcome_message():
 
 
 func print_start():
-	new_output("Systems now online")
+	new_output("Copyright Viral Co. 2074")
 	get_tree().create_timer(1.0).timeout.connect(start_session)
 
 
@@ -84,4 +86,20 @@ func _on_animation_player_animation_finished(_anim_name):
 func clear_screen():
 	for child in history.get_children():
 		child.queue_free()
+
+
+func start_game():
+	new_output("Session start")
+
+
+func end_game():
+	var end_message: String
+	if (System.score >= 100):
+		end_message = "System hack complete\n"
+	else:
+		end_message = "User ejected from the system\n"
+	end_message += " Tasks complete: " + str(System.successful_tasks) + "\n"
+	end_message += " Codes redeemed: " + str(System.codes_redeemed) + "\n"
+	end_message += " Total successful hacks: " + str(System.successful_hacks)
+	new_output(end_message)
 

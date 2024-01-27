@@ -1,5 +1,7 @@
 extends Node
 
+@onready var attacks = $"../../Attacks"
+
 var nonsense_noun = PackedStringArray(["zigzaggle", "quibberish", "snazzlepop", "bibblebop",
 	"fizzletwist", "flummoxify", "quibberwacky", "snickerdoodle", "noodleknack",
 	"bamboozlery", "zonkeroon", "wobbleflop", "malarkeydoodle", "gibberwump", "flibbertigib",
@@ -40,32 +42,52 @@ func random_action():
 	var noun = random_noun()
 	var verb = random_verb()
 	
-	var action: String
-	action = verb + " the " + noun
-	
-	var action_complete: String
-	match verb:
+	if attacks.long_commands:
+		noun += "o" + random_noun()
+
+	var verb_complete = verb
+	match verb_complete:
 		"shut":
 			pass
 		"scan":
-			verb += "ned"
+			verb_complete += "ned"
+		"clamp":
+			verb_complete += "ed"
 		"run":
 			pass
 		"undo":
-			verb += "ne"
+			verb_complete += "ne"
+		"strike":
+			verb_complete = "struck"
 		_:
-			if verb.ends_with("el"):
-				verb += "led"
-			elif verb.ends_with("am"):
-				verb += "med"
-			elif verb.ends_with("p"):
-				verb += "ped"
-			elif verb.ends_with("e"):
-				verb += "d"
+			if verb_complete.ends_with("el"):
+				verb_complete += "led"
+			elif verb_complete.ends_with("am"):
+				verb_complete += "med"
+			elif verb_complete.ends_with("p"):
+				verb_complete += "ped"
+			elif verb_complete.ends_with("e"):
+				verb_complete += "d"
 			else:
-				verb += "ed"
+				verb_complete += "ed"
+
+
+	if attacks.reverse_attack:
+		noun = noun.reverse()
+		verb = verb.reverse()
+		verb_complete = verb_complete.reverse()
 	
-	action_complete = noun + " " + verb
+	
+	var action: String
+	action = verb + " the " + noun
+
+	var action_complete: String
+	action_complete = noun.capitalize() + " " + verb_complete
+	
+	if attacks.silly_case:
+		action = sillify(action)
+		action_complete = sillify(action_complete)
+
 	return [action, action_complete]
 
 
@@ -74,3 +96,16 @@ func random_noun() -> String:
 
 func random_verb() -> String:
 	return verbs[randi() % verb_count]
+	
+
+func sillify(original: String) -> String:
+	var result = ""
+	
+	for i in range(original.length()):
+		if i % 2 == 1:
+			result += original[i].to_upper()
+		else:
+			result += original[i].to_lower()
+
+	return result
+

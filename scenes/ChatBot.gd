@@ -24,14 +24,21 @@ const Message = preload("res://scenes/objects/ChatMessage.tscn")
 func _ready():
 	scrollbar.connect("changed", scrollbar_changed)
 	EventBus.game_start.connect(start_game)
+	EventBus.game_end.connect(end_game)
 
 
 func start_game():
 	first_message = true
-	type_message("Initiating hack...")
+	type_message("Initiating system breach...")
 	await get_tree().create_timer(1).timeout
-	type_message("Aaaand we're in. Generating tasks...")
+	type_message("Aaaand we're in. Remember, I'll give you the commands to type in the terminal "
+		+ yellow("in yellow."))
 
+func end_game():
+	if System.score >= 100:
+		type_message("Well done, Hacker. We've spread to another network.")
+	else:
+		type_message("Unfortunately, the hack was not successful, but we can't get them all.")
 
 func system_start():
 	display_welcome_message()
@@ -59,12 +66,25 @@ func yellow(text: String) -> String:
 
 
 func type_message(message_text):
+	
+	if chat.get_child_count() > 0:
+		var previous_message = chat.get_child(get_child_count() - 1)
+		previous_message.text = "[color=#949494]" + remove_colour(previous_message.text) + "[/color]"
+	
 	var message = Message.instantiate()
 	chat.add_child(message)
 	message.new_message(message_text)
 	
 	typing = true
 	message.typing_finished.connect(finished_typing)
+
+
+
+func remove_colour(input_str: String) -> String:
+	var regex = RegEx.new()
+	regex.compile("\\[.*?\\]")
+	return regex.sub(input_str, "")
+
 
 
 func finished_typing():

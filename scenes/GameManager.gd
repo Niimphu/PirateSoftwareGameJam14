@@ -21,17 +21,20 @@ func new_task():
 
 
 func input_submitted(input_text: String) -> String:
-	if expected_output == "":
+	if expected_output == "" or not System.in_game:
 		return " "
 	match input_text:
 		"":
 			return ""
 		expected_input:
+			System.scored(expected_input)
 			expected_input = ""
+			expected_output == ""
 			return complete_message
 		_:
-			return ""
-		
+			return "Error: unknown command"
+	
+
 
 func generate_task():
 	var task = RWG.random_action()
